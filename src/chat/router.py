@@ -13,7 +13,7 @@ from users.users_utils import (get_current_user, get_current_websocket_user,
 
 router = RabbitRouter("amqp://guest:guest@localhost:5672/", tags=["Chat"])
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="src/templates")
 
 manager = ConnectionManager()
 

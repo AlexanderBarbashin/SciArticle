@@ -36,4 +36,4 @@
 * Запустить контейнеры **docker compose up -d**
 * Установить зависимости **pip install -r requirements.txt**
 * Применить миграции **alembic upgrade head**
-* Запустить приложение **python3 src.main.py**
+* Запустить приложение **python3 src/main.py**

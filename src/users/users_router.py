@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 from starlette.responses import Response
 
-from src.database import get_async_session
+from database import get_async_session
 
 from .users_models import User
 from .users_schemas import UserAdd, UserAuth
@@ -60,11 +60,6 @@ async def auth_user(response: Response, user_data: UserAuth) -> Dict[str, str | 
     access_token = create_access_token({"sub": user.username})
     response.set_cookie(key="users_access_token", value=access_token, httponly=True)
     return {"access_token": access_token, "refresh_token": None}
-
-
-@router.get("/me/")
-async def get_me(user_data: User = Depends(get_current_user)):
-    return user_data
 
 
 @router.post("/logout/")
