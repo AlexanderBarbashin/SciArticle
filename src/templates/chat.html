@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Чат</title>
+</head>
+<body>
+<div class="flex flex-col items-center">
+    <h1>WebSocket Chat</h1>
+    <h2>Your Username: <span id="ws-id"></span></h2>
+    <div id="room-full-message" class="hidden text-red-500">
+        The room is full. Please try again later.
+    </div>
+    <form action="" onsubmit="sendMessage(event)" id="message-form">
+        <input class="bg-green-300" type="text" id="messageText" autocomplete="off"/>
+        <button>Send</button>
+    </form>
+    <ul id='messages'>
+    </ul>
+</div>
+<script>
+    document.querySelector("#ws-id").textContent = `{{ username }}`;
+    let ws = new WebSocket(`ws://localhost:8002/updates/{{ room_id }}?token={{ token }}`);
+    ws.onmessage = function(event) {
+        let messages = document.getElementById('messages')
+        let message = document.createElement('li')
+        let content = document.createTextNode(event.data)
+        message.appendChild(content)
+        messages.appendChild(message)
+    };
+    ws.onclose = function(event) {
+        console.log("WebSocket closed");
+        if (event.code === 4000) {
+            document.getElementById("message-form").classList.add("hidden");
+            document.getElementById("room-full-message").classList.remove("hidden");
+        }
+    };
+    function sendMessage(event) {
+        let input = document.getElementById("messageText")
+        ws.send(input.value)
+        input.value = ''
+        event.preventDefault()
+    }
+</script>
+</body>
+
