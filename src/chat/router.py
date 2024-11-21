@@ -6,7 +6,7 @@ from starlette.templating import Jinja2Templates, _TemplateResponse
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from chat.models import ConnectionManager
-from src.chat.schemas import Message
+from chat.schemas import Message
 from users.users_models import User
 from users.users_utils import (get_current_user, get_current_websocket_user,
                                get_token)

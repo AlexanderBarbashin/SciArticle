@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
                                     create_async_engine)
 from sqlalchemy.orm import declarative_base
 
-from src.config import DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER
+from config import DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER
 
 DATABASE_URL = (
     "postgresql+asyncpg://"

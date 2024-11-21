@@ -1,7 +1,9 @@
+from typing import Dict
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
-from starlette.responses import JSONResponse, Response
+from starlette.responses import Response
 
 from src.database import get_async_session
 
@@ -17,7 +19,7 @@ router = APIRouter(prefix="/users", tags=["User"])
 @router.post("/register")
 async def register_user(
     user_data: UserAdd, session: AsyncSession = Depends(get_async_session)
-) -> JSONResponse:
+) -> Dict[str, str]:
     """
     Эндпоинт для регистрации пользователя.
 
@@ -35,11 +37,11 @@ async def register_user(
     new_user = User(**user_dict)
     session.add(new_user)
     await session.commit()
-    return JSONResponse({"message": "User successfully register."})
+    return {"message": "User successfully register."}
 
 
 @router.post("/login")
-async def auth_user(response: Response, user_data: UserAuth) -> JSONResponse:
+async def auth_user(response: Response, user_data: UserAuth) -> Dict[str, str | None]:
     """
     Эндпоинт для аутентификации пользователя.
 
@@ -57,7 +59,7 @@ async def auth_user(response: Response, user_data: UserAuth) -> JSONResponse:
         )
     access_token = create_access_token({"sub": user.username})
     response.set_cookie(key="users_access_token", value=access_token, httponly=True)
-    return JSONResponse({"access_token": access_token, "refresh_token": None})
+    return {"access_token": access_token, "refresh_token": None}
 
 
 @router.get("/me/")
@@ -66,7 +68,7 @@ async def get_me(user_data: User = Depends(get_current_user)):
 
 
 @router.post("/logout/")
-async def logout_user(response: Response) -> JSONResponse:
+async def logout_user(response: Response) -> Dict[str, str]:
     """
     Эндпоинт для выхода пользователя из учетной записи.
 
@@ -74,4 +76,4 @@ async def logout_user(response: Response) -> JSONResponse:
     :return: Ответ сервера
     """
     response.delete_cookie(key="users_access_token")
-    return JSONResponse({"message": "User successfully logout"})
+    return {"message": "User successfully logout"}
